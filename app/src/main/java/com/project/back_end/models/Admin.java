@@ -8,8 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Represents a system administrator in the Smart Clinic System.
- * Mapped to a database table via JPA.
+ * Represents a system administrator.
+ * Annotated as a JPA Entity to map to the database.
  */
 @Entity
 public class Admin {
@@ -18,22 +18,17 @@ public class Admin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "username cannot be null")
     private String username;
 
-    @NotNull
+    @NotNull(message = "password cannot be null")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    /**
-     * Default no-argument constructor required by JPA.
-     */
-    public Admin() {
-    }
+    // Default constructor for JPA
+    public Admin() {}
 
-    /**
-     * Parameterized constructor for easy object creation.
-     */
+    // Parameterized constructor for convenience
     public Admin(String username, String password) {
         this.username = username;
         this.password = password;
@@ -65,4 +60,3 @@ public class Admin {
         this.password = password;
     }
 }
-

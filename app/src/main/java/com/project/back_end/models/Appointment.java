@@ -3,14 +3,13 @@ package com.project.back_end.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
- * Represents a scheduled appointment between a patient and a doctor.
- * Mapped to a database table via JPA.
+ * Represents a medical appointment, linking doctors and patients.
+ * Mapped as a JPA entity for relational database storage.
  */
 @Entity
 public class Appointment {
@@ -19,107 +18,63 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "Doctor is required")
     @ManyToOne
     private Doctor doctor;
 
-    @NotNull
+    @NotNull(message = "Patient is required")
     @ManyToOne
     private Patient patient;
 
-    @Future
+    @NotNull(message = "Appointment time is required")
+    @Future(message = "Appointment time must be in the future")
     private LocalDateTime appointmentTime;
 
-    @NotNull
-    private Integer status; // 0 = scheduled, 1 = completed
+    @NotNull(message = "Status is required")
+    private int status; // 0 for Scheduled, 1 for Completed
+
+    public Appointment() {}
+
+    // --- Helper Methods (Transient) ---
 
     /**
-     * Default no-argument constructor required by JPA.
-     */
-    public Appointment() {
-    }
-
-    /**
-     * Parameterized constructor for easy object creation.
-     */
-    public Appointment(Doctor doctor, Patient patient, LocalDateTime appointmentTime, Integer status) {
-        this.doctor = doctor;
-        this.patient = patient;
-        this.appointmentTime = appointmentTime;
-        this.status = status;
-    }
-
-    // --- Calculated Utility Methods ---
-
-    /**
-     * Calculates the estimated end time of the appointment.
-     * @return LocalDateTime representing 1 hour after the start time.
+     * Calculates the end time (1 hour after start).
      */
     @Transient
     public LocalDateTime getEndTime() {
-        if (appointmentTime == null) return null;
-        return appointmentTime.plusHours(1);
+        return appointmentTime != null ? appointmentTime.plusHours(1) : null;
     }
 
     /**
-     * Extracts only the date part of the scheduled appointment.
-     * @return LocalDate of the appointment.
+     * Extracts the date portion for UI display.
      */
     @Transient
     public LocalDate getAppointmentDate() {
-        if (appointmentTime == null) return null;
-        return appointmentTime.toLocalDate();
+        return appointmentTime != null ? appointmentTime.toLocalDate() : null;
     }
 
     /**
-     * Extracts only the time part of the scheduled appointment.
-     * @return LocalTime of the appointment.
+     * Extracts the time portion for UI display.
      */
     @Transient
     public LocalTime getAppointmentTimeOnly() {
-        if (appointmentTime == null) return null;
-        return appointmentTime.toLocalTime();
+        return appointmentTime != null ? appointmentTime.toLocalTime() : null;
     }
 
-    // --- Standard Getters and Setters ---
+    // --- Getters and Setters ---
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Doctor getDoctor() { return doctor; }
+    public void setDoctor(Doctor doctor) { this.doctor = doctor; }
 
-    public Doctor getDoctor() {
-        return doctor;
-    }
+    public Patient getPatient() { return patient; }
+    public void setPatient(Patient patient) { this.patient = patient; }
 
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
-    }
+    public LocalDateTime getAppointmentTime() { return appointmentTime; }
+    public void setAppointmentTime(LocalDateTime appointmentTime) { this.appointmentTime = appointmentTime; }
 
-    public Patient getPatient() {
-        return patient;
-    }
-
-    public void setPatient(Patient patient) {
-        this.patient = patient;
-    }
-
-    public LocalDateTime getAppointmentTime() {
-        return appointmentTime;
-    }
-
-    public void setAppointmentTime(LocalDateTime appointmentTime) {
-        this.appointmentTime = appointmentTime;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+    public int getStatus() { return status; }
+    public void setStatus(int status) { this.status = status; }
 }

@@ -2,16 +2,12 @@ package com.project.back_end.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-
+import jakarta.validation.constraints.*;
 import java.util.List;
 
 /**
- * Represents a medical professional in the Smart Clinic System.
- * Mapped to a database table via JPA.
+ * Represents a healthcare provider in the Smart Clinic System.
+ * Mapped as a JPA entity for relational database storage.
  */
 @Entity
 public class Doctor {
@@ -20,7 +16,7 @@ public class Doctor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Doctor's name is required")
+    @NotNull(message = "Name is required")
     @Size(min = 3, max = 100, message = "Name must be between 3 and 100 characters")
     private String name;
 
@@ -29,92 +25,43 @@ public class Doctor {
     private String specialty;
 
     @NotNull(message = "Email is required")
-    @Email(message = "Must be a valid email address")
+    @Email(message = "Please provide a valid email address")
     private String email;
 
     @NotNull(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters long")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @NotNull(message = "Phone number is required")
-    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
+    @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phone;
 
     @ElementCollection
     private List<String> availableTimes;
 
-    /**
-     * Default no-argument constructor required by JPA.
-     */
-    public Doctor() {
-    }
+    public Doctor() {}
 
-    /**
-     * Parameterized constructor for easy object creation.
-     */
-    public Doctor(String name, String specialty, String email, String password, String phone, List<String> availableTimes) {
-        this.name = name;
-        this.specialty = specialty;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.availableTimes = availableTimes;
-    }
+    // --- Getters and Setters ---
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getSpecialty() { return specialty; }
+    public void setSpecialty(String specialty) { this.specialty = specialty; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public String getSpecialty() {
-        return specialty;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
-    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public List<String> getAvailableTimes() {
-        return availableTimes;
-    }
-
-    public void setAvailableTimes(List<String> availableTimes) {
-        this.availableTimes = availableTimes;
-    }
+    public List<String> getAvailableTimes() { return availableTimes; }
+    public void setAvailableTimes(List<String> availableTimes) { this.availableTimes = availableTimes; }
 }

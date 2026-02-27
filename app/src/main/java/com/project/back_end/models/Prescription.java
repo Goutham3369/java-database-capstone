@@ -6,8 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 /**
- * Represents a medical prescription stored as a document in MongoDB.
- * This handles unstructured medical notes and medication details.
+ * Represents a medical prescription stored in MongoDB.
+ * Uses a flexible document schema to store medication and notes.
  */
 @Document(collection = "prescriptions")
 public class Prescription {
@@ -26,76 +26,45 @@ public class Prescription {
     @Size(min = 3, max = 100, message = "Medication name must be between 3 and 100 characters")
     private String medication;
 
-    @NotNull(message = "Dosage information is required")
+    @NotNull(message = "Dosage is required")
+    @Size(min = 3, max = 20, message = "Dosage must be between 3 and 20 characters")
     private String dosage;
 
-    @Size(max = 200, message = "Doctor's notes cannot exceed 200 characters")
+    @Size(max = 200, message = "Doctor notes cannot exceed 200 characters")
     private String doctorNotes;
 
     /**
-     * Default no-argument constructor required by Spring Data MongoDB.
+     * Default constructor required for Spring Data MongoDB.
      */
-    public Prescription() {
-    }
+    public Prescription() {}
 
     /**
      * Parameterized constructor for easy object creation.
      */
-    public Prescription(String patientName, String medication, String dosage, String doctorNotes, Long appointmentId) {
+    public Prescription(String patientName, Long appointmentId, String medication, String dosage) {
         this.patientName = patientName;
+        this.appointmentId = appointmentId;
         this.medication = medication;
         this.dosage = dosage;
-        this.doctorNotes = doctorNotes;
-        this.appointmentId = appointmentId;
     }
 
     // --- Getters and Setters ---
 
-    public String getId() {
-        return id;
-    }
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public String getPatientName() { return patientName; }
+    public void setPatientName(String patientName) { this.patientName = patientName; }
 
-    public String getPatientName() {
-        return patientName;
-    }
+    public Long getAppointmentId() { return appointmentId; }
+    public void setAppointmentId(Long appointmentId) { this.appointmentId = appointmentId; }
 
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
-    }
+    public String getMedication() { return medication; }
+    public void setMedication(String medication) { this.medication = medication; }
 
-    public Long getAppointmentId() {
-        return appointmentId;
-    }
+    public String getDosage() { return dosage; }
+    public void setDosage(String dosage) { this.dosage = dosage; }
 
-    public void setAppointmentId(Long appointmentId) {
-        this.appointmentId = appointmentId;
-    }
-
-    public String getMedication() {
-        return medication;
-    }
-
-    public void setMedication(String medication) {
-        this.medication = medication;
-    }
-
-    public String getDosage() {
-        return dosage;
-    }
-
-    public void setDosage(String dosage) {
-        this.dosage = dosage;
-    }
-
-    public String getDoctorNotes() {
-        return doctorNotes;
-    }
-
-    public void setDoctorNotes(String doctorNotes) {
-        this.doctorNotes = doctorNotes;
-    }
+    public String getDoctorNotes() { return doctorNotes; }
+    public void setDoctorNotes(String doctorNotes) { this.doctorNotes = doctorNotes; }
 }

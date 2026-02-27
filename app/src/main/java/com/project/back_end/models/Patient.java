@@ -1,17 +1,11 @@
 package com.project.back_end.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 /**
- * Represents a registered patient in the Smart Clinic System.
- * Mapped to a database table via JPA.
+ * Represents a patient user in the Smart Clinic System.
+ * Mapped as a JPA entity for relational database storage.
  */
 @Entity
 public class Patient {
@@ -25,15 +19,15 @@ public class Patient {
     private String name;
 
     @NotNull(message = "Email is required")
-    @Email(message = "Must be a valid email address")
+    @Email(message = "Please provide a valid email format")
     private String email;
 
     @NotNull(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters long")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
     @NotNull(message = "Phone number is required")
-    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
+    @Pattern(regexp = "\\d{10}", message = "Phone number must be exactly 10 digits")
     private String phone;
 
     @NotNull(message = "Address is required")
@@ -41,69 +35,27 @@ public class Patient {
     private String address;
 
     /**
-     * Default no-argument constructor required by JPA.
+     * Default constructor for JPA.
      */
-    public Patient() {
-    }
-
-    /**
-     * Parameterized constructor for easy object creation.
-     */
-    public Patient(String name, String email, String password, String phone, String address) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.address = address;
-    }
+    public Patient() {}
 
     // --- Getters and Setters ---
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public String getName() {
-        return name;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public String getEmail() {
-        return email;
-    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 }
