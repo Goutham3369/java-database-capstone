@@ -13,29 +13,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * General utility service for authentication and token validation.
+ * Authentication service for validating logins and tokens.
  */
 @Service
-public class Service {
+public class AuthService {
 
     private final AdminRepository adminRepository;
     private final DoctorRepository doctorRepository;
     private final PatientRepository patientRepository;
     private final TokenService tokenService;
 
-    public Service(AdminRepository adminRepository, 
-                   DoctorRepository doctorRepository, 
-                   PatientRepository patientRepository, 
-                   TokenService tokenService) {
+    public AuthService(AdminRepository adminRepository, 
+                       DoctorRepository doctorRepository, 
+                       PatientRepository patientRepository, 
+                       TokenService tokenService) {
         this.adminRepository = adminRepository;
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.tokenService = tokenService;
     }
 
-    /**
-     * Validates a login request for Admin, Doctor, or Patient.
-     */
     public Map<String, Object> login(Login login, String role) {
         Map<String, Object> response = new HashMap<>();
         String token = "";
@@ -68,13 +65,10 @@ public class Service {
         return response;
     }
 
-    /**
-     * Verifies if a token is valid and belongs to the correct role.
-     */
     public Map<String, String> validateToken(String token, String requiredRole) {
         Map<String, String> errors = new HashMap<>();
         if (!tokenService.validateToken(token, requiredRole)) {
-            errors.put("auth", "Unauthorized access: Invalid or expired token");
+            errors.put("auth", "Unauthorized access");
         }
         return errors;
     }

@@ -1,34 +1,25 @@
 package com.project.back_end.mvc;
 
-import com.project.back_end.service.Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.project.back_end.service.AuthService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Map;
-
+/**
+ * Controller for handling Dashboard UI routing.
+ */
 @Controller
+@RequestMapping("/dashboard")
 public class DashboardController {
 
-    @Autowired
-    private Service service;
+    private final AuthService authService;
 
-    @GetMapping("/adminDashboard/{token}")
-    public String adminDashboard(@PathVariable String token) {
-        Map<String, String> errors = service.validateToken(token, "admin");
-        if (errors != null && errors.isEmpty()) {
-            return "admin/adminDashboard";
-        }
-        return "redirect:/";
+    public DashboardController(AuthService authService) {
+        this.authService = authService;
     }
 
-    @GetMapping("/doctorDashboard/{token}")
-    public String doctorDashboard(@PathVariable String token) {
-        Map<String, String> errors = service.validateToken(token, "doctor");
-        if (errors != null && errors.isEmpty()) {
-            return "doctor/doctorDashboard";
-        }
-        return "redirect:/";
+    @GetMapping
+    public String showDashboard() {
+        return "dashboard"; // Assuming dashboard.html or dashboard.jsp exists
     }
 }

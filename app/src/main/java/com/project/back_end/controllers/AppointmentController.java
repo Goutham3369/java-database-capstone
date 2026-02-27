@@ -2,7 +2,7 @@ package com.project.back_end.controllers;
 
 import com.project.back_end.model.Appointment;
 import com.project.back_end.service.AppointmentService;
-import com.project.back_end.service.Service;
+import com.project.back_end.service.AuthService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +13,18 @@ import java.util.Map;
 
 /**
  * Controller for managing appointment-related API endpoints.
+ * Standardizes booking, updates, and cancellations.
  */
 @RestController
 @RequestMapping("${api.path}" + "appointment")
 public class AppointmentController {
 
     private final AppointmentService appointmentService;
-    private final Service service;
+    private final AuthService authService;
 
-    public AppointmentController(AppointmentService appointmentService, Service service) {
+    public AppointmentController(AppointmentService appointmentService, AuthService authService) {
         this.appointmentService = appointmentService;
-        this.service = service;
+        this.authService = authService;
     }
 
     /**
@@ -35,10 +36,9 @@ public class AppointmentController {
             @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
             @PathVariable String token) {
         
-        // Validate token for any authenticated user role (admin/doctor/patient)
-        if (service.validateToken(token, "admin").isEmpty() || 
-            service.validateToken(token, "doctor").isEmpty() || 
-            service.validateToken(token, "patient").isEmpty()) {
+        if (authService.validateToken(token, "admin").isEmpty() || 
+            authService.validateToken(token, "doctor").isEmpty() || 
+            authService.validateToken(token, "patient").isEmpty()) {
             return ResponseEntity.ok(appointmentService.getAppointment(name, date, token));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -49,9 +49,7 @@ public class AppointmentController {
      */
     @PostMapping("/{token}")
     public ResponseEntity<String> bookAppointment(@RequestBody Appointment appointment, @PathVariable String token) {
-        // Patients usually book appointments
-        Map<String, String> errors = service.validateToken(token, "patient");
-        if (!errors.isEmpty()) {
+        if (!authService.validateToken(token, "patient").isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
 
@@ -66,8 +64,7 @@ public class AppointmentController {
      */
     @PutMapping("/{token}")
     public ResponseEntity<Map<String, String>> updateAppointment(@RequestBody Appointment appointment, @PathVariable String token) {
-        // Both Admin and Patient might need to update an appointment
-        if (service.validateToken(token, "admin").isEmpty() || service.validateToken(token, "patient").isEmpty()) {
+        if (authService.validateToken(token, "admin").isEmpty() || authService.validateToken(token, "patient").isEmpty()) {
             return appointmentService.updateAppointment(appointment);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -78,7 +75,7 @@ public class AppointmentController {
      */
     @DeleteMapping("/{id}/{token}")
     public ResponseEntity<Map<String, String>> cancelAppointment(@PathVariable long id, @PathVariable String token) {
-        if (service.validateToken(token, "admin").isEmpty() || service.validateToken(token, "patient").isEmpty()) {
+        if (authService.validateToken(token, "admin").isEmpty() || authService.validateToken(token, "patient").isEmpty()) {
             return appointmentService.cancelAppointment(id, token);
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
