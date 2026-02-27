@@ -1,80 +1,64 @@
-/* This is the style sheet for the patientDashboard.html */
-  .card-actions {
-    background-color: #244557;
-    padding: 10px;
+.card-actions {
+    background-color: #222;
     text-align: center;
-  }
-
-  .card-actions:hover{
-    background-color: #1c3745;
-  }
-  .ripple-overlay {
+    padding: 15px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+.card-actions:hover {
+    background-color: #111;
+}
+.ripple {
     position: fixed;
-    width: 20px;
-    height: 20px;
-    background-color: #1c3745;
     border-radius: 50%;
-    z-index: 9999;
-    transform: translate(-50%, -50%) scale(0);
-    transition: transform 1s ease-out, opacity 1s ease;
-  }
-  
-  .ripple-overlay.active {
-    transform: translate(-50%, -50%) scale(150);
-    opacity: 1;
-  }
-  
-  .modalApp {
+    background: rgba(1, 92, 93, 0.4);
+    transform: scale(0);
+    animation: rippleEffect 0.6s linear;
+    pointer-events: none;
+}
+@keyframes rippleEffect {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+.modalApp {
     position: fixed;
-  bottom: -100%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50%;
-  background: #fff;
-  padding: 20px;
-  z-index: 10000;
-  transition: bottom 1.5s ease-in;
-  box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.3);
-  border-radius: 10px 10px 0 0;
-  text-align: center;
-  }
-  
-  .modalApp.active {
+    bottom: -100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 600px;
+    background-color: white;
+    padding: 20px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    transition: bottom 0.4s ease-in-out;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+}
+.modalApp.active {
     bottom: 0;
-  }
-  
-  .modalApp h2 {
-    margin-top: 20px;
-  }
-  
-  .modalApp input {
+}
+.modalApp input, .modalApp select {
     display: block;
-    margin: 10px auto;
-    padding: 10px;
     width: 90%;
-    margin-bottom: 40px;
-  }
-
-  .modalApp select {
-    display: block;
-    margin: 10px auto;
-    padding: 10px;
-    width: 90%;
-    margin-bottom: 40px;
-  }
-  
-  .confirm-booking {
-    padding: 10px 20px;
-    background: #1c3745;
-    color: #fff;
+    margin: 15px auto;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+.book-btn {
+    background-color: #015c5d;
+    color: white;
+    padding: 15px;
     border: none;
+    border-radius: 8px;
+    width: 90%;
+    display: block;
+    margin: 20px auto 0;
     cursor: pointer;
-    
-  
-    
-  }
-  .confirm-booking:hover {
+    transition: filter 0.3s;
+}
+.book-btn:hover {
     filter: brightness(1.2);
-    background-color: #1c3745;
-  }
-  
+}
