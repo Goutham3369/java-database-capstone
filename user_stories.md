@@ -1,6 +1,6 @@
 # Patient Appointment Portal - User Stories
 
-## Exercise 2: Admin User Stories
+##  Admin User Stories
 
 **Title:** Admin - Log In
 _As an admin, I want to log into the portal with my username and password, so that I can manage the platform securely._
@@ -129,7 +129,7 @@ _As a patient, I want to view my upcoming appointments, so that I can prepare ac
 
 ---
 
-## Exercise 4: Doctor User Stories
+##  Doctor User Stories
 
 **Title:** Doctor - Log In
 _As a doctor, I want to log into the portal, so that I can manage my appointments._
