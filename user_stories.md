@@ -59,7 +59,7 @@ _As an admin, I want to run a stored procedure in MySQL CLI to get the number of
 
 ---
 
-## Exercise 3: Patient User Stories
+## Patient User Stories
 
 **Title:** Patient - Explore Doctors
 _As a patient, I want to view a list of doctors without logging in, so that I can explore options before registering._
