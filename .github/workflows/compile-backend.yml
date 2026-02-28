@@ -15,7 +15,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Compile with Maven
+      - name: Compile with Maven Wrapper
         run: |
           cd app
-          mvn clean compile
+          chmod +x mvnw
+          ./mvnw clean compile
