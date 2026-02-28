@@ -71,4 +71,12 @@ public class DoctorService {
     public List<Doctor> getDoctorsBySpecialty(String specialty) {
         return doctorRepository.findBySpecialty(specialty);
     }
+    /**
+     * Retrieves a list of all doctors from the database.
+     *
+     * @return a list of Doctor objects
+     */
+    public List<Doctor> getAllDoctors() {
+        return doctorRepository.findAll();
+    }
 }

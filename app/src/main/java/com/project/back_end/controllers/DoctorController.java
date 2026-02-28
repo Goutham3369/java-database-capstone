@@ -62,4 +62,13 @@ public class DoctorController {
     public ResponseEntity<List<Doctor>> getDoctorsBySpecialty(@PathVariable String specialty) {
         return ResponseEntity.ok(doctorService.getDoctorsBySpecialty(specialty));
     }
+    /**
+     * Endpoint to retrieve all registered doctors.
+     *
+     * @return HTTP 200 OK with the list of doctors
+     */
+    @GetMapping("")
+    public ResponseEntity<List<Doctor>> getAllDoctors() {
+        return ResponseEntity.ok(doctorService.getAllDoctors());
+    }
 }
