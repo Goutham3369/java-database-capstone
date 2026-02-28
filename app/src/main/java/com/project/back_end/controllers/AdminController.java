@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("${api.path}" + "admin")
@@ -26,6 +27,18 @@ public class AdminController {
         this.authService = authService;
         this.doctorService = doctorService;
         this.patientService = patientService;
+    }
+
+    /**
+     * FIX 1: Added a Register method so your curl command actually works!
+     */
+    @PostMapping("/register")
+    public ResponseEntity<Map<String, String>> register(@RequestBody Admin admin) {
+        // We call authService to save the new admin to the database
+        authService.registerAdmin(admin); 
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Admin registered successfully");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
@@ -56,13 +69,16 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * FIX 2: Fixed the null return so you can see patients on the dashboard
+     */
     @GetMapping("/patients/{token}")
     public ResponseEntity<List<Patient>> getPatients(@PathVariable String token) {
         Map<String, String> errors = authService.validateToken(token, "admin");
         if (!errors.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        // Assuming a method exists in patientService to get all patients
-        return ResponseEntity.ok(null); 
+        // Calling the actual service instead of returning null
+        return ResponseEntity.ok(patientService.getAllPatients()); 
     }
 }

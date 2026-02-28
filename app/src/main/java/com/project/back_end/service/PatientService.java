@@ -67,7 +67,10 @@ public class PatientService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
-
+     
+    public List<Patient> getAllPatients() {
+    return patientRepository.findAll();
+}
     /**
      * Fetches a patient's profile by email.
      */

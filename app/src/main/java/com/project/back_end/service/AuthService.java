@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Authentication service for validating logins and tokens.
+ * Authentication service for validating logins, tokens, and registration.
  */
 @Service
 public class AuthService {
@@ -31,6 +31,14 @@ public class AuthService {
         this.doctorRepository = doctorRepository;
         this.patientRepository = patientRepository;
         this.tokenService = tokenService;
+    }
+
+    /**
+     * ADDED: registerAdmin method to solve the 'cannot find symbol' error.
+     * This allows the AdminController to save a new admin to the MySQL database.
+     */
+    public void registerAdmin(Admin admin) {
+        adminRepository.save(admin);
     }
 
     public Map<String, Object> login(Login login, String role) {

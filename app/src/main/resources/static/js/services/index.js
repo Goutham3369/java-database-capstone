@@ -1,39 +1,28 @@
 import { openModal } from '../components/modals.js';
 import { API_BASE_URL } from '../config/config.js';
 
-const ADMIN_API = API_BASE_URL + '/admin/login'; // Added /login to match your controller
-const DOCTOR_API = API_BASE_URL + '/doctor/login';
-const PATIENT_API = API_BASE_URL + '/patient/login';
+// --- THE FIX: Use API_BASE_URL here instead of "localhost" ---
+const ADMIN_API = `${API_BASE_URL}/admin/login`;
+const DOCTOR_API = `${API_BASE_URL}/doctor/login`;
+const PATIENT_API = `${API_BASE_URL}/patient/login`;
+const PATIENT_SIGNUP_API = `${API_BASE_URL}/patient`;
+const ADD_DOCTOR_API = `${API_BASE_URL}/doctor`;
 
 window.onload = function () {
-    // 1. Fix: Changed 'adminLogin' to 'admin-btn' to match index.html
     const adminBtn = document.getElementById('admin-btn');
-    if (adminBtn) {
-        adminBtn.addEventListener('click', () => {
-            openModal('adminLogin'); // This opens the specific modal template
-        });
-    }
+    if (adminBtn) adminBtn.addEventListener('click', () => openModal('adminLogin'));
 
-    // 2. Fix: Changed 'doctorLogin' to 'doctor-btn'
     const doctorBtn = document.getElementById('doctor-btn');
-    if (doctorBtn) {
-        doctorBtn.addEventListener('click', () => {
-            openModal('doctorLogin');
-        });
-    }
+    if (doctorBtn) doctorBtn.addEventListener('click', () => openModal('doctorLogin'));
 
-    // 3. Added: Patient button listener
     const patientBtn = document.getElementById('patient-btn');
-    if (patientBtn) {
-        patientBtn.addEventListener('click', () => {
-            openModal('patientLogin');
-        });
-    }
+    if (patientBtn) patientBtn.addEventListener('click', () => openModal('patientLogin'));
 };
 
 /**
- * Global handlers for the login forms inside the modals
+ * GLOBAL LOGIN HANDLERS
  */
+
 window.adminLoginHandler = async function () {
     const username = document.getElementById('username')?.value || '';
     const password = document.getElementById('password')?.value || '';
@@ -48,7 +37,8 @@ window.adminLoginHandler = async function () {
         if (response.ok) {
             const data = await response.json();
             localStorage.setItem('token', data.token || data.jwt || data);
-            window.location.href = '/dashboard'; // Redirect on success
+            alert("Login Successful!");
+            window.location.href = '/admin-dashboard'; 
         } else {
             alert('Invalid Admin credentials!');
         }
@@ -58,4 +48,97 @@ window.adminLoginHandler = async function () {
     }
 };
 
-// ... Similar handlers for window.doctorLoginHandler and window.patientLoginHandler
+window.doctorLoginHandler = async function () {
+    const email = document.getElementById('email')?.value || '';
+    const password = document.getElementById('password')?.value || '';
+
+    try {
+        const response = await fetch(DOCTOR_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem('token', data.token || data.jwt || data);
+            window.location.href = '/doctor-dashboard';
+        } else {
+            alert('Invalid Doctor credentials!');
+        }
+    } catch (error) {
+        alert('Could not connect to the server.');
+    }
+};
+
+window.loginPatient = async function () {
+    const email = document.getElementById('email')?.value || '';
+    const password = document.getElementById('password')?.value || '';
+
+    try {
+        const response = await fetch(PATIENT_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem('token', data.token || data.jwt || data);
+            window.location.href = '/patient-dashboard';
+        } else {
+            alert('Invalid Patient credentials!');
+        }
+    } catch (error) {
+        alert('Could not connect to the server.');
+    }
+};
+
+window.signupPatient = async function () {
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const phone = document.getElementById('phone').value;
+    const address = document.getElementById('address').value;
+
+    try {
+        const response = await fetch(PATIENT_SIGNUP_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password, phone, address })
+        });
+
+        if (response.ok) {
+            alert("Signup successful! Please login.");
+            openModal('patientLogin');
+        } else {
+            alert("Signup failed.");
+        }
+    } catch (error) {
+        alert("Server error during signup.");
+    }
+};
+
+window.adminAddDoctor = async function () {
+    const name = document.getElementById('doctorName').value;
+    const speciality = document.getElementById('specialization').value;
+    const email = document.getElementById('doctorEmail').value;
+    const password = document.getElementById('doctorPassword').value;
+
+    try {
+        const response = await fetch(ADD_DOCTOR_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, speciality, email, password })
+        });
+
+        if (response.ok) {
+            alert("Doctor added successfully!");
+            document.getElementById('modal').style.display = 'none';
+        } else {
+            alert("Failed to add doctor.");
+        }
+    } catch (error) {
+        alert("Server error adding doctor.");
+    }
+};

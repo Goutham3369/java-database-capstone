@@ -39,14 +39,15 @@ export function openModal(type) {
                     <label><input type="checkbox" name="availability" value="12:00-13:00"> 12:00 PM - 1:00 PM</label>
                 </div>
             </div>
-            <button class="dashboard-btn" id="saveDoctorBtn">Save</button>
+            <button class="dashboard-btn" onclick="window.adminAddDoctor()">Save</button>
         `;
     } else if (type === 'patientLogin') {
         modalContent = `
             <h2>Patient Login</h2>
             <input type="text" id="email" placeholder="Email" class="input-field">
             <input type="password" id="password" placeholder="Password" class="input-field">
-            <button class="dashboard-btn" id="loginBtn">Login</button>
+            <button class="dashboard-btn" onclick="window.loginPatient()">Login</button>
+            <p>Don't have an account? <a href="#" onclick="openModal('patientSignup')">Sign Up</a></p>
         `;
     } else if (type === "patientSignup") {
         modalContent = `
@@ -56,59 +57,34 @@ export function openModal(type) {
             <input type="password" id="password" placeholder="Password" class="input-field">
             <input type="text" id="phone" placeholder="Phone" class="input-field">
             <input type="text" id="address" placeholder="Address" class="input-field">
-            <button class="dashboard-btn" id="signupBtn">Signup</button>
+            <button class="dashboard-btn" onclick="window.signupPatient()">Signup</button>
         `;
     } else if (type === 'adminLogin') {
         modalContent = `
             <h2>Admin Login</h2>
             <input type="text" id="username" name="username" placeholder="Username" class="input-field">
             <input type="password" id="password" name="password" placeholder="Password" class="input-field">
-            <button class="dashboard-btn" id="adminLoginBtn">Login</button>
+            <button class="dashboard-btn" onclick="window.adminLoginHandler()">Login</button>
         `;
     } else if (type === 'doctorLogin') {
         modalContent = `
             <h2>Doctor Login</h2>
             <input type="text" id="email" placeholder="Email" class="input-field">
             <input type="password" id="password" placeholder="Password" class="input-field">
-            <button class="dashboard-btn" id="doctorLoginBtn">Login</button>
+            <button class="dashboard-btn" onclick="window.doctorLoginHandler()">Login</button>
         `;
     }
 
-    // Inject content into the modal body
     const modalBody = document.getElementById('modal-body');
     const modalContainer = document.getElementById('modal');
     
     if (modalBody) modalBody.innerHTML = modalContent;
     if (modalContainer) modalContainer.style.display = 'block';
 
-    // Set up the close button logic
     const closeBtn = document.getElementById('closeModal');
     if (closeBtn) {
         closeBtn.onclick = () => {
             modalContainer.style.display = 'none';
         };
-    }
-
-    // --- Event Listeners with Global Scope Checks ---
-    // We use window.functionName to ensure the listeners find the handlers in index.js
-
-    if (type === "patientSignup" && document.getElementById("signupBtn")) {
-        document.getElementById("signupBtn").addEventListener("click", window.signupPatient);
-    }
-
-    if (type === "patientLogin" && document.getElementById("loginBtn")) {
-        document.getElementById("loginBtn").addEventListener("click", window.loginPatient);
-    }
-
-    if (type === 'addDoctor' && document.getElementById('saveDoctorBtn')) {
-        document.getElementById('saveDoctorBtn').addEventListener('click', window.adminAddDoctor);
-    }
-
-    if (type === 'adminLogin' && document.getElementById('adminLoginBtn')) {
-        document.getElementById('adminLoginBtn').addEventListener('click', window.adminLoginHandler);
-    }
-
-    if (type === 'doctorLogin' && document.getElementById('doctorLoginBtn')) {
-        document.getElementById('doctorLoginBtn').addEventListener('click', window.doctorLoginHandler);
     }
 }
