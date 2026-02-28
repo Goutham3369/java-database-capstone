@@ -62,11 +62,24 @@ public class DoctorController {
     public ResponseEntity<List<Doctor>> getDoctorsBySpecialty(@PathVariable String specialty) {
         return ResponseEntity.ok(doctorService.getDoctorsBySpecialty(specialty));
     }
+
     /**
-     * Endpoint to retrieve all registered doctors.
-     *
-     * @return HTTP 200 OK with the list of doctors
+     * Requirement for Question 5: Retrieve doctor availability based on role, ID, date, and token.
      */
+    @GetMapping("/availability/{user}/{doctorId}/{date}/{token}")
+    public ResponseEntity<List<Object>> getAvailability(
+            @PathVariable String user,
+            @PathVariable Long doctorId,
+            @PathVariable String date,
+            @PathVariable String token) {
+        
+        // Security check for either doctor or patient roles
+        if (authService.validateToken(token, user).isEmpty()) {
+            return ResponseEntity.ok(doctorService.getAvailability(doctorId, date));
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
     @GetMapping("")
     public ResponseEntity<List<Doctor>> getAllDoctors() {
         return ResponseEntity.ok(doctorService.getAllDoctors());
